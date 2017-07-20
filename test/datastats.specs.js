@@ -21,50 +21,50 @@ var expect = Chai.expect;
 // Test Suites
 describe('TSMT Basic Data Stats', function () {
     it('does not accept a null data provider', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = null;
-        expect(myStats.samples).to.equal(0);
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = null;
+        expect(stats.samples).to.equal(0);
     });
     it('does not accept a zero-length data provider', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [];
-        expect(myStats.samples).to.equal(0);
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [];
+        expect(stats.samples).to.equal(0);
     });
     it('reports correct sample count for a singleton data provider', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [1.0];
-        expect(myStats.samples).to.equal(1);
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [1.0];
+        expect(stats.samples).to.equal(1);
     });
     it('reports correct min/max/mean/median for a singleton data provider', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [1.0];
-        expect(myStats.min).to.equal(1);
-        expect(myStats.max).to.equal(1);
-        expect(myStats.mean).to.equal(1);
-        expect(myStats.median).to.equal(1);
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [1.0];
+        expect(stats.min).to.equal(1);
+        expect(stats.max).to.equal(1);
+        expect(stats.mean).to.equal(1);
+        expect(stats.median).to.equal(1);
     });
     it('reports correct mean/median/mode for small dataset', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [60, 64, 70, 70, 70, 75, 80, 90, 95, 95, 100];
-        expect(myStats.mean).to.equal(79);
-        expect(myStats.median).to.equal(75);
-        expect(myStats.mode).to.equal(70);
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [60, 64, 70, 70, 70, 75, 80, 90, 95, 95, 100];
+        expect(stats.mean).to.equal(79);
+        expect(stats.median).to.equal(75);
+        expect(stats.mode).to.equal(70);
     });
     it('reports correct mean/median/mode/std for small dataset #2', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [17, 12, 14, 17, 13, 16, 18, 20, 13, 12,
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [17, 12, 14, 17, 13, 16, 18, 20, 13, 12,
             12, 17, 16, 15, 14, 12, 12, 13, 17, 14,
             15, 12, 15, 16, 12, 18, 20, 19, 12, 15,
             18, 14, 16, 17, 15, 19, 12, 13, 12, 15
         ];
-        expect(myStats.mean).to.equal(14.975);
-        expect(myStats.median).to.equal(15);
-        expect(myStats.mode).to.equal(12);
-        expect(Math.abs(myStats.std - 2.496) < 0.001).to.be.true;
+        expect(stats.mean).to.equal(14.975);
+        expect(stats.median).to.equal(15);
+        expect(stats.mode).to.equal(12);
+        expect(Math.abs(stats.std - 2.496) < 0.001).to.be.true;
     });
     it('reports correct mean/std for larger dataset', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [-0.17153201811526, -0.24688253248949, 0.11338441630439, 0.21688342552633, -0.011673274048979,
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [-0.17153201811526, -0.24688253248949, 0.11338441630439, 0.21688342552633, -0.011673274048979,
             -0.02003736435437, -0.34336588850306, 0.078405646177621, -0.065555801648822, 0.028825789263126,
             0.042177644981986, -0.50528595024946, -0.4273793332064, 0.3017619807293, 0.040940131180399,
             0.12162445946489, 0.046924000912204, -0.31441861873484, -0.24797010811493, -0.31245115727514,
@@ -85,52 +85,80 @@ describe('TSMT Basic Data Stats', function () {
             0.17281588794572, -0.35251113939319, 0.073961983637722, 0.11265707197549, -0.317176214879,
             0.091016285581571, -0.14930773416087, 0.047940214497312, -0.13754460419439, -0.078689419991652
         ];
-        expect(Math.abs(myStats.mean - -0.0287) < 0.001).to.be.true;
-        expect(Math.abs(myStats.std - 0.2447) < 0.001).to.be.true;
+        expect(Math.abs(stats.mean - -0.0287) < 0.001).to.be.true;
+        expect(Math.abs(stats.std - 0.2447) < 0.001).to.be.true;
     });
     it('reports correct geometric mean #1', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [10, 51.2, 8];
-        expect(Math.abs(myStats.geometricMean - 16) < 0.0000001).to.be.true;
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [10, 51.2, 8];
+        expect(Math.abs(stats.geometricMean - 16) < 0.0000001).to.be.true;
     });
     it('reports correct geometric mean #2', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [1, 3, 9, 27, 81];
-        expect(Math.abs(myStats.geometricMean - 9) < 0.0000001).to.be.true;
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [1, 3, 9, 27, 81];
+        expect(Math.abs(stats.geometricMean - 9) < 0.0000001).to.be.true;
     });
     it('reports correct harmonic mean #1', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [100, 110, 90, 120];
-        expect(Math.abs(myStats.harmonicMean - 103.8) < 0.01).to.be.true;
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [100, 110, 90, 120];
+        expect(Math.abs(stats.harmonicMean - 103.8) < 0.01).to.be.true;
     });
     it('reports correct harmonic mean #2', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [13.2, 14.2, 14.8, 15.2, 16.1];
-        expect(Math.abs(myStats.harmonicMean - 14.63) < 0.01).to.be.true;
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [13.2, 14.2, 14.8, 15.2, 16.1];
+        expect(Math.abs(stats.harmonicMean - 14.63) < 0.01).to.be.true;
     });
     it('reports correct skewness #1', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [61, 61, 61, 61, 61, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [61, 61, 61, 61, 61, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
             67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67,
             67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70,
             70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 73, 73, 73, 73, 73, 73, 73, 73
         ];
-        expect(Math.abs(myStats.skewness - -.108) < 0.001).to.be.true;
+        expect(Math.abs(stats.skewness - -.108) < 0.001).to.be.true;
     });
     it('reports correct skewness and kurtosis', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        myStats.data = [2, 5, -1, 3, 4, 5, 0, 2];
-        expect(Math.abs(myStats.skewness - -.35) < 0.01).to.be.true;
-        expect(Math.abs(myStats.kurtosis - -.94) < 0.01).to.be.true;
+        var stats = new DataStats_1.TSMT$DataStats();
+        stats.data = [2, 5, -1, 3, 4, 5, 0, 2];
+        expect(Math.abs(stats.skewness - -.35) < 0.01).to.be.true;
+        expect(Math.abs(stats.kurtosis - -.94) < 0.01).to.be.true;
     });
     it('reports correct sample covariance', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        var cov = myStats.covariance([2.1, 2.5, 4.0, 3.6], [8, 12, 14, 10]);
+        var stats = new DataStats_1.TSMT$DataStats();
+        var cov = stats.covariance([2.1, 2.5, 4.0, 3.6], [8, 12, 14, 10]);
         expect(Math.abs(cov - 1.53) < 0.01).to.be.true;
     });
     it('reports correct Pearson corr. coef.', function () {
-        var myStats = new DataStats_1.TSMT$DataStats();
-        var corr = myStats.correlation([43, 21, 25, 42, 57, 59, 247], [99, 65, 79, 75, 87, 81, 486]);
+        var stats = new DataStats_1.TSMT$DataStats();
+        var corr = stats.correlation([43, 21, 25, 42, 57, 59, 247], [99, 65, 79, 75, 87, 81, 486]);
         expect(Math.abs(corr - 0.98761) < 0.0001).to.be.true;
+    });
+    // covariance matrix test were taken off the internet; much easier to debug and programmatically validate
+    // it('returns empty covariance matrix for empty input', function() {
+    //   const stats: TSMT$DataStats   = new TSMT$DataStats();
+    //   let cov: Array<Array<number>> = stats.covarianceMatrix([]);
+    //
+    //   expect(cov.length).to.equal(0);
+    //
+    //   cov = stats.covarianceMatrix(null);
+    //   expect(cov.length).to.equal(0);
+    // });
+    it('returns correct covariance matrix from 5 x 3 input', function () {
+        var stats = new DataStats_1.TSMT$DataStats();
+        var input = new Array();
+        input.push([90, 60, 90]);
+        input.push([90, 90, 30]);
+        input.push([60, 60, 60]);
+        input.push([60, 60, 90]);
+        input.push([30, 30, 30]);
+        var cov = stats.covarianceMatrix(input);
+        // only the full lower triangle is returned since the result matrix is symmetric
+        expect(cov.length).to.equal(3);
+        expect(cov[0][0]).to.equal(504);
+        expect(cov[1][0]).to.equal(360);
+        expect(cov[1][1]).to.equal(360);
+        expect(cov[2][0]).to.equal(180);
+        expect(cov[2][1]).to.equal(0);
+        expect(cov[2][2]).to.equal(720);
     });
 });

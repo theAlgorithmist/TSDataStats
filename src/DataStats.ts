@@ -15,14 +15,16 @@
  */
 
 /**
- * Typescript Math Toolkit: Some basic statistics on a linear collection of numerical data.  Assign a data set and then query various statistical measures.
- * Lazy validation is used for most popular statistics to ensure that only the required computations are performed on a JIT basis.  The algorithms used in
- * each method are designed around the needs of educational and business applications, i.e. the data sets are not massively large.  Note that some computations
- * may be less efficient than a textbook formula in order to protect against loss of significance and issues with large numbers.
+ * Typescript Math Toolkit: Some basic statistics on a linear collection of numerical data.  Assign a data set and then
+ * query various statistical measures. Lazy validation is used for most popular statistics to ensure that only the
+ * required computations are performed on a JIT basis.  The algorithms used in each method are designed around the
+ * needs of educational and business applications, i.e. the data sets are not massively large.  Note that some
+ * computations may be less efficient than a textbook formula in order to protect against loss of significance and
+ * issues with large numbers.
  *
  * @author Jim Armstrong (www.algorithmist.net)
  * 
- * @version 1.0
+ * @version 1.1 (Added covariance matrix)
  */
 
  export class TSMT$DataStats
@@ -689,5 +691,100 @@
     let ys: number = this.std;
          
     return this.covariance(x,y)/(xs*ys);
-  }   
+  }
+
+  /**
+   * Compute the covariance matrix of the Array of random variable measurements
+   *
+   * @param X: Array<Array<number>> Two-dimensional array where each column represents a number of samples
+   * of a single quantity, i.e. test score
+   *
+   * @returns C: Array<Array<number>> Covariance matrix, i.e. variances along the main diagonal and covariances
+   * in the off-diagonal elements.  The full lower triangle is returned as the matrix is known to by symmetric.
+   */
+  public covarianceMatrix(X: Array<Array<number>>): Array<Array<number>>
+  {
+    if (X === undefined || X == null || (X.hasOwnProperty('length')  && X.length == 0)) {
+      return [];
+    }
+
+    const m: number = X.length;    // number of rows or sample count
+    const n: number = X[0].length; // number of columns or individual categories to be correlated
+    const s: number = 1.0/m;       // inverse of sample count
+
+    // the cov matrix will be n x n
+    let cov: Array<Array<number>> = new Array<Array<number>>();
+    let i: number;
+    let j: number;
+
+    for (j = 0; j < n; ++j)
+    {
+      // only need to fill out the full lower triangle
+      cov[j] = new Array<number>(j+1).fill(0.0);
+    }
+
+    // matrix-matrix product, S = 1/m * (I' x X) where I' is the mxn identity - now, only n of the sums is unique;
+    // that vector is simply copied from row to row in the subsequent matrix subtraction
+    const sums: Array<number> = new Array<number>();
+
+    for (j = 0; j < n; ++j)
+    {
+      sums[j] = 0.0;
+
+      for (i = 0; i < m; ++i)
+      {
+        sums[j] += X[i][j];
+      }
+
+      sums[j] *= s;
+    }
+
+    // C = X - S, but compute/store the result column-major
+    let C: Array<Array<number>> = new Array<Array<number>>();
+    for (j = 0; j < n; ++j)
+    {
+      C.push( new Array<number>() );
+
+      let cj: Array<Number> = C[j];
+      for (i = 0; i < m; ++i)
+      {
+        // re-use the sums array
+        cj.push( X[i][j] - sums[j] );
+      }
+    }
+
+    // inline C^T x C; the matrix will be symmetric, so it's only necessary to compute the full lower triangle
+    let k: number;
+    let sum: number;
+
+    for (i = 0; i < n; ++i)
+    {
+      let ci: Array<number> = C[i];
+
+      for (j = 0; j <= i; ++j)
+      {
+        let cj: Array<number> = C[j];
+        sum                   = 0.0;
+
+        for (k = 0; k < m; ++k)
+        {
+          sum += ci[k]*cj[k];
+        }
+
+        cov[i][j] = sum;
+      }
+    }
+
+    // C := C x (1/m) (scalar product)
+    for (i = 0; i < n; ++i)
+    {
+      for (j = 0; j <= i; ++j)
+      {
+        // scale by inverse of sample count
+        cov[i][j] *= s;
+      }
+    }
+
+    return cov;
+  }
 }
