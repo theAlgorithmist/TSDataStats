@@ -283,10 +283,12 @@
     }
 
     // fractions based on number of data points
-    let f: Array<number> = new Array<number>(0.0);
+    let f: Array<number> = new Array<number>();
     let n1: number       = 1.0/(n-1);
     let i: number;
 
+    f[0] = 0.0;
+   
     for (i = 1; i < n-1; ++i) {
       f[i] = f[i - 1] + n1;
     }
